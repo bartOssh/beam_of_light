@@ -6,7 +6,7 @@ Pytorch backend api for image recognition with multiple models, training and pro
 <p align="center">
     <img 
     width="50%" height="50%" 
-    src="https://github.com/Bartoshko/beam_of_light/blob/master/assets/torch.jpeg"/>
+    src="https://github.com/bartOssh/beam_of_light/blob/master/assets/torch.jpeg"/>
 </p>
 
 ### Dependencies
