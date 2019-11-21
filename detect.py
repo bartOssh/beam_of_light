@@ -1,6 +1,7 @@
 import argparse
 import torch
-from src import download_image, detect, train, draw_image_and_recogintion, find_boxes
+from src import download_image, detect_local_file, train
+from src import draw_image_and_recogintion, find_boxes
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -30,7 +31,7 @@ if __name__ == '__main__':
                         help='Allows to download image from the given url')
     args = parser.parse_args()
     if args.pretrained is not None and args.pretrained[0] is not None:
-        input_image, output_predictions = detect(args, device)
+        input_image, output_predictions = detect_local_file(args, device)
         draw_image_and_recogintion(input_image, output_predictions)
         print('\n RECOGNITION OBJECT: \n {} \n'
               .format(find_boxes(output_predictions)))
