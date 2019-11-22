@@ -28,5 +28,6 @@ def post_image_for_image():
     """
     if request.content_type == "image/jpeg":
         predictions = detect_buffer(request.data, device, nn_model)
-        return map_predictions_on_image_buffer(request.data, predictions)
+        img = map_predictions_on_image_buffer(request.data, predictions)
+        return img, 200
     return 'Wrong Content-Type', 404

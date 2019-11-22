@@ -100,7 +100,10 @@ def map_predictions_on_image_buffer(image_buf, output_predictions):
     """
     image = Image.open(io.BytesIO(image_buf))
     image = _map_predictions_to_image(image, output_predictions)
-    return image.tobytes()
+    img_bytes_array = io.BytesIO()
+    image.save(img_bytes_array, format='PNG')
+    img_bytes_array = img_bytes_array.getvalue()
+    return img_bytes_array
 
 
 def _map_predictions_to_image(input_image, output_predictions):

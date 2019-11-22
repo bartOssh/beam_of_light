@@ -12,6 +12,8 @@ Pytorch backend api for image recognition with multiple models, training and pro
 ### Dependencies
 
 - [Pytorch](https://pytorch.org/)
+- [Numpy](https://numpy.org/devdocs/user/quickstart.html)
+- [PIL](https://pillow.readthedocs.io/en/stable/)
 - [Flask](https://flask.palletsprojects.com/en/1.1.x/)
 - [Flask Api](https://www.flaskapi.org/)
 - [Matplotlib](https://matplotlib.org/)
