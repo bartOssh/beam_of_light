@@ -91,7 +91,12 @@ def draw_image_and_recogintion(input_image, output_predictions):
 def map_predictions_on_image_buffer(image_buf, output_predictions):
     """Maps predictions to image and transforms to bytes buffer
 
-    TODO: docs
+    Args:
+        image_buf (bytes string): Raw bytes string
+        output_predictions (Tensor): AI model output predictions tensor
+
+    Returns:
+        image (PIL Image class instance): image object from PIL Image module
     """
     image = Image.open(io.BytesIO(image_buf))
     image = _map_predictions_to_image(image, output_predictions)

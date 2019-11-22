@@ -36,12 +36,14 @@ def find_boxes(output_predictions):
     return named
 
 
-def detect_local_file(args, device):
+def detect_local_file(args, device, nn_model):
     """Performs image recognition of local file
 
     Args:
         args (list): The list of arguments provided by the user
         device (object): The pytorch device object
+        nn_model (object): The pytorch nn model instance that is pretrained
+                            and evaluated
 
     Returns:
         tuple (input_image, output_predictions) Tuple of vectorized image
@@ -51,33 +53,25 @@ def detect_local_file(args, device):
     input_batch, input_image = load_tensor_and_image_from_file(
         img_path, device
     )
-    # todo: move to be created in router than pass proper model for recognition
-    cnn_model = torch.hub.load(
-        'pytorch/vision:v0.4.2',
-        'fcn_resnet101',
-        pretrained=True).eval()
     with torch.no_grad():
-        output = cnn_model(input_batch)['out'][0]
+        output = nn_model(input_batch)['out'][0]
     output_predictions = output.argmax(0)
     return input_image, output_predictions
 
 
-def detect_buffer(image_buf, device):
+def detect_buffer(image_buf, device, nn_model):
     """Performs image recognition of given image buffer
 
     Args:
         image_buf (bytes buffer): The bytes buffer if image to recognize
         device (object): The pytorch device object
+        nn_module (object): The pytorch nn model instance that is pretrained
 
     Returns:
         output_predictions: AI model output predictions tensor
     """
     input_batch = load_image_buffer_to_tensor(image_buf, device)
-    cnn_model = torch.hub.load(
-        'pytorch/vision:v0.4.2',
-        'fcn_resnet101',
-        pretrained=True).eval()
     with torch.no_grad():
-        output = cnn_model(input_batch)['out'][0]
+        output = nn_model(input_batch)['out'][0]
     output_predictions = output.argmax(0)
     return output_predictions

@@ -5,7 +5,8 @@ from src import draw_image_and_recogintion, find_boxes
 
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+nn_model = torch.hub.load('pytorch/vision:v0.4.2', 'fcn_resnet101',
+            pretrained=True).eval()
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='This module allows to tests \
@@ -31,7 +32,8 @@ if __name__ == '__main__':
                         help='Allows to download image from the given url')
     args = parser.parse_args()
     if args.pretrained is not None and args.pretrained[0] is not None:
-        input_image, output_predictions = detect_local_file(args, device)
+        input_image, output_predictions = detect_local_file(args,
+            device, nn_model)
         draw_image_and_recogintion(input_image, output_predictions)
         print('\n RECOGNITION OBJECT: \n {} \n'
               .format(find_boxes(output_predictions)))
