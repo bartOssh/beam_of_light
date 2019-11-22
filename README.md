@@ -1,5 +1,5 @@
 # Beam of light
-Pytorch backend api for image recognition with multiple models, training and production build in together.
+Pytorch back end api for image recognition with multiple models, training and production build in together.
 
 # Version: NOT SET YET
 
@@ -18,7 +18,7 @@ Pytorch backend api for image recognition with multiple models, training and pro
 - [Flask Api](https://www.flaskapi.org/)
 - [Matplotlib](https://matplotlib.org/)
 
-### Instalation
+### Installation
 
 - This project uses Python 3.6 or greater
 - Install virtual environment: [venv](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
@@ -36,5 +36,4 @@ Pytorch backend api for image recognition with multiple models, training and pro
 - [Claire Amalfitano](https://github.com/polypodioides)
 - [Janusz Roll](https://github.com/janeek1995)
 
-# This software is still in development process (until first versioning)
-
+# This software is still in development process (until first version)

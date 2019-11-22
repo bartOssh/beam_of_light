@@ -1,12 +1,11 @@
 import argparse
 import torch
-from src import download_image, detect_local_file, train
-from src import draw_image_and_recogintion, find_boxes
+from src import YoloVisionTrained
+from src import draw_image_and_recogintion
 
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-nn_model = torch.hub.load('pytorch/vision:v0.4.2', 'fcn_resnet101',
-            pretrained=True).eval()
+yolo = YoloVisionTrained('fcn_resnet101', 'cpu', False)
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='This module allows to tests \
@@ -32,13 +31,17 @@ if __name__ == '__main__':
                         help='Allows to download image from the given url')
     args = parser.parse_args()
     if args.pretrained is not None and args.pretrained[0] is not None:
-        input_image, output_predictions = detect_local_file(args,
-            device, nn_model)
+        input_image, output_predictions = yolo.detect_local_file(
+            args.pretrained[0]
+            )
         draw_image_and_recogintion(input_image, output_predictions)
         print('\n RECOGNITION OBJECT: \n {} \n'
-              .format(find_boxes(output_predictions)))
+              .format(
+                YoloVisionTrained.find_boxes(output_predictions))
+              )
     if args.train is not None and args.train[0] is not None:
-        train(args, device)
+        # train(args, device)
+        print('Not Implemented')
     if args.local is not None and args.local[0] is not None:
         print('Not Implemented')
     if args.download is not None and args.download[0] is not None:
