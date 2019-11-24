@@ -1,11 +1,11 @@
 import torch
 from flask import Flask, request
-from .. import YoloVisionTrained
+from .. import YoloVisionRecognition
 from .. import map_predictions_on_image_buffer
 
 
 app = Flask(__name__)
-yolo = YoloVisionTrained('fcn_resnet101', 'cpu', True)
+yolo = YoloVisionRecognition('fcn_resnet101', 'cpu', True)
 
 
 @app.route("/box", methods=['POST'])
@@ -15,7 +15,7 @@ def post_image_for_box():
     """
     if request.content_type == "image/jpeg":
         predictions = yolo.detect_buffer(request.data)
-        return YoloVisionTrained.find_boxes(predictions)
+        return YoloVisionRecognition.find_boxes(predictions)
     return 'Wrong Content-Type', 404
 
 

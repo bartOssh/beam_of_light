@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 num_of_iter = 1
-file = open('./assets/test_0.jpeg', 'rb').read()
+file = open('./assets/dog.jpeg', 'rb').read()
 times = []
 
 for i in range(0, num_of_iter):

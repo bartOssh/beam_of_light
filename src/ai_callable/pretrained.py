@@ -4,7 +4,45 @@ from .. import load_tensor_and_image_from_file, load_image_buffer_to_tensor
 from ..params import COCO_INSTANCE_CATEGORY_NAMES as COCO
 
 
-class YoloVisionTrained:
+recognition_nets = ['deeplabv3_resnet101', 'fcn_resnet101']
+detection_net = [
+    'alexnet', 'densenet121', 'densenet161', 'densenet169',
+    'densenet201', 'googlenet', 'inception_v3', 'mobilenet_v2', 'resnet101',
+    'resnet152', 'resnet18', 'resnet34', 'resnet50', 'resnext101_32x8d',
+    'resnext50_32x4d', 'shufflenet_v2_x0_5', 'shufflenet_v2_x1_0',
+    'squeezenet1_0', 'squeezenet1_1', 'vgg11', 'vgg11_bn', 'vgg13',
+    'vgg13_bn', 'vgg16', 'vgg16_bn', 'vgg19', 'vgg19_bn', 'wide_resnet101_2',
+    'wide_resnet50_2'
+    ]
+
+
+def get_names(force_reload=False):
+    """Gives list of model names available on torch hub
+
+    Return:
+        models (list[string]): list of pytorch/vision models available
+                                on pytorch hub
+    """
+    return torch.hub.list('pytorch/vision', force_reload=force_reload)
+
+
+def check_if_new_models_in_hub():
+    """Checks if there are new models available on torch hub
+
+    Return:
+        boolean: True if new models are available, False otherwise
+    """
+    hub_list = get_names(False)
+    local_list = recognition_nets + detection_net
+    if len(set(hub_list) & set(local_list)) == len(local_list):
+        for i in local_list:
+            if i not in hub_list:
+                return True
+        return False
+    return True
+
+
+class YoloVisionRecognition:
     """Trained deep neuron network vision recognition interface
 
     Attributes:
@@ -14,7 +52,7 @@ class YoloVisionTrained:
     _models = 'pytorch/vision',
 
     def __init__(self, nn_model=None, device='cpu', force_reload=False):
-        """YoloVisionTrained constructor
+        """YoloVisionRecognition constructor
 
         Args:
             nn_module (string): Deep net vision model
@@ -22,27 +60,13 @@ class YoloVisionTrained:
             forced_reaload (bool): True to reload entrypoints in cache
                                     False otherwise
         """
-        if not isinstance(force_reload, bool):
-            raise Exception('Wrong force reload parameter')
-        self._entrypoints = self._get_entrypoints(force_reload)
         if device not in ['cuda', 'cpu']:
             raise Exception('Wrong device type passed to constructor')
         self._device = device
-        if nn_model not in self._entrypoints:
-            raise Exception('Passed nn_module to the \
-                constructor don\'t exists')
+        if nn_model not in recognition_nets:
+            raise Exception('Passed nn_module don\'t exists')
         self._nn_module = torch.hub.load('pytorch/vision', nn_model,
             pretrained=True).eval()
-
-    @staticmethod
-    def get_names():
-        """Returns list of available models
-
-        Return:
-            models (list[string]): list of pytorch/vision models available
-                                    on pytorch hub
-        """
-        return self._get_entrypoints(force_reload=False)
 
     @staticmethod
     def find_boxes(output_predictions):
@@ -99,7 +123,8 @@ class YoloVisionTrained:
             image_path, self._device
         )
         with torch.no_grad():
-            output = self._nn_module(input_batch)['out'][0]
+            output = self._nn_module(input_batch)
+        output = output['out'][0]
         output_predictions = output.argmax(0)
         return input_image, output_predictions
 
@@ -114,12 +139,16 @@ class YoloVisionTrained:
         """
         input_batch = load_image_buffer_to_tensor(image_buf, self._device)
         with torch.no_grad():
-            output = self._nn_module(input_batch)['out'][0]
+            output = self._nn_module(input_batch)
+        output = output['out'][0]
         output_predictions = output.argmax(0)
         return output_predictions
 
-    def _get_entrypoints(self, force_reload):
-        return torch.hub.list(
-            'pytorch/vision',
-            force_reload=force_reload
-            )
+# TODO: implement detection class
+#  print('Output tensor shape is {}'.format(output.shape))
+# output_predictions = output
+# # print(output_predictions)
+# provabilities = torch.nn.functional.softmax(output[0], dim=0)
+# max_value = torch.max(provabilities)
+# i_x = (provabilities == max_value).nonzero().item()
+# print('Highest provability {} has {}'.format(max_value, i_x))
