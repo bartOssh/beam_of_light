@@ -11,9 +11,29 @@ file = open('./assets/dog.jpeg', 'rb').read()
 times = []
 
 for i in range(0, num_of_iter):
+    # testing endpoint classes
+    ts_start = time.time()
+    res = requests.post(url='http://127.0.0.1:5000/detection/classes',
+                        data=file,
+                        headers={'Content-Type': 'image/jpeg'})
+    print("\n RESPONSE POST to classes, test num {} \n Sending buffer length:\
+        {},\n Received {}"
+          .format(i, len(file), res.json()))
+    ts_stop = time.time()
+    times.append(ts_stop - ts_start)
+    # testing endpoint most likely
+    ts_start = time.time()
+    res = requests.post(url='http://127.0.0.1:5000/detection/most_likely',
+                        data=file,
+                        headers={'Content-Type': 'image/jpeg'})
+    print("\n RESPONSE POST to most likely, test num {} \n Sending buffer \
+        length: {},\n Received {}"
+          .format(i, len(file), res.json()))
+    ts_stop = time.time()
+    times.append(ts_stop - ts_start)
     # testing endpoint box
     ts_start = time.time()
-    res = requests.post(url='http://127.0.0.1:5000/box',
+    res = requests.post(url='http://127.0.0.1:5000/recognition/box',
                         data=file,
                         headers={'Content-Type': 'image/jpeg'})
     print("\n RESPONSE POST to boxes, test num {} \n Sending buffer length:\
@@ -24,7 +44,7 @@ for i in range(0, num_of_iter):
 
     # testing endpoint image
     ts_start = time.time()
-    res = requests.post(url='http://127.0.0.1:5000/image',
+    res = requests.post(url='http://127.0.0.1:5000/recognition/image',
                         data=file,
                         headers={'Content-Type': 'image/jpeg'})
     print("\n RESPONSE POST to image, test num {} \n Sending buffer length:\

@@ -2,10 +2,10 @@ import time
 import torch
 import argparse
 from src import YoloVisionRecognition
-from src import draw_image_and_recogintion
+from src import draw_image_and_recogintion, download_image
 
 nn_model = 'deeplabv3_resnet101'
-yolo = YoloVisionRecognition(nn_model, 'cpu', False)
+yolo = YoloVisionRecognition(nn_model, 'cpu')
 
 
 if __name__ == '__main__':
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.pretrained is not None and args.pretrained[0] is not None:
         ts_0 = time.time()
-        input_image, output_predictions = yolo.detect_local_file(
+        input_image, output_predictions = yolo.recognize_local_file(
             args.pretrained[0]
             )
         ts_1 = time.time()
