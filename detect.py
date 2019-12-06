@@ -1,5 +1,4 @@
 import time
-import torch
 import argparse
 from src import YoloVisionRecognition
 from src import draw_image_and_recogintion, download_image
