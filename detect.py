@@ -34,11 +34,11 @@ if __name__ == '__main__':
         ts_0 = time.time()
         input_image, output_predictions = yolo.recognize_local_file(
             args.pretrained[0]
-            )
+        )
         ts_1 = time.time()
         print('\n RECOGNITION OBJECT: \n {} \n'
               .format(
-                YoloVisionRecognition.find_boxes(output_predictions))
+                  YoloVisionRecognition.find_boxes(output_predictions))
               )
         print('Total prediction time of the with model: {} took {} sec'
               .format(nn_model, int(ts_1 - ts_0)))
