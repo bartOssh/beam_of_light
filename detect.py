@@ -1,9 +1,10 @@
+import time
 import argparse
-import torch
-from src import download_image, detect, train, draw_image_and_recogintion, find_boxes
+from src import YoloVisionRecognition
+from src import draw_image_and_recogintion, download_image
 
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+nn_model = 'deeplabv3_resnet101'
+yolo = YoloVisionRecognition(nn_model, 'cpu')
 
 
 if __name__ == '__main__':
@@ -30,12 +31,21 @@ if __name__ == '__main__':
                         help='Allows to download image from the given url')
     args = parser.parse_args()
     if args.pretrained is not None and args.pretrained[0] is not None:
-        input_image, output_predictions = detect(args, device)
-        draw_image_and_recogintion(input_image, output_predictions)
+        ts_0 = time.time()
+        input_image, output_predictions = yolo.recognize_local_file(
+            args.pretrained[0]
+        )
+        ts_1 = time.time()
         print('\n RECOGNITION OBJECT: \n {} \n'
-              .format(find_boxes(output_predictions)))
+              .format(
+                  YoloVisionRecognition.find_boxes(output_predictions))
+              )
+        print('Total prediction time of the with model: {} took {} sec'
+              .format(nn_model, int(ts_1 - ts_0)))
+        draw_image_and_recogintion(input_image, output_predictions)
     if args.train is not None and args.train[0] is not None:
-        train(args, device)
+        # train(args, device)
+        print('Not Implemented')
     if args.local is not None and args.local[0] is not None:
         print('Not Implemented')
     if args.download is not None and args.download[0] is not None:

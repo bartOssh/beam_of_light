@@ -1,1 +1,3 @@
-from .image_utils import download_image, load_tensor_and_image, draw_image_and_recogintion
+from .image_utils import map_predictions_on_image_buffer
+from .image_utils import download_image, load_tensor_and_image_from_file
+from .image_utils import draw_image_and_recogintion, load_image_buffer_to_tensor
